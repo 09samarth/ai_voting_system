@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Voice Voting System - Major Project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .header .project-info {
+            font-size: 1rem;
+            opacity: 0.8;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f0f4ff;
+        }
+        
+        .card-header h2 {
+            font-size: 1.8rem;
+            color: #2d3748;
+            margin-left: 15px;
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .voting-section {
+            text-align: center;
+        }
+        
+        .candidates-list {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .candidate-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid #667eea;
+        }
+        
+        .candidate-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-right: 20px;
+            width: 40px;
+        }
+        
+        .candidate-name {
+            font-size: 1.2rem;
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .progress-tracker {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .progress-tracker::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+        
+        .progress-step {
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 4px solid #e2e8f0;
+            color: #a0aec0;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-step.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        .progress-step.completed {
+            border-color: #48bb78;
+            background: #48bb78;
+            color: white;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+        
+        .step-label {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            color: #4a5568;
+            white-space: nowrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .btn-large {
+            padding: 20px 40px;
+            font-size: 1.3rem;
+        }
+        
+        .status-display {
+            margin: 25px 0;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        
+        .status-ready {
+            background: #e6fffa;
+            color: #234e52;
+            border: 2px solid #81e6d9;
+        }
+        
+        .status-listening {
+            background: #fff5b4;
+            color: #744210;
+            border: 2px solid #f6e05e;
+            animation: breathe 2s infinite;
+        }
+        
+        .status-success, .status-completed {
+            background: #f0fff4;
+            color: #22543d;
+            border: 2px solid #9ae6b4;
+        }
+        
+        .status-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 2px solid #feb2b2;
+        }
+        
+        @keyframes breathe {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .results-section {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .results-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .results-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .results-table tr:hover {
+            background: #f8fafc;
+        }
+        
+        .instructions {
+            background: linear-gradient(135deg, #e6fffa 0%, #f0fff4 100%);
+            border: 2px solid #9ae6b4;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+        }
+        
+        .instructions h3 {
+            color: #22543d;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+            color: #2d3748;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.8;
+        }
+        
+        .feature-highlight {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .feature-highlight h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .feature-highlight p {
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .tech-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .progress-tracker {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .progress-tracker::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Voice Voting System</h1>
+            <p class="subtitle">Accessible Voice-Guided Democratic Participation</p>
+            <div class="project-info">
+                <strong>Major Project Demonstration</strong><br>
+                Advanced AI • Voice Recognition • Web Technologies
+                <div class="tech-stack">
+                    <span class="tech-badge">Python Flask</span>
+                    <span class="tech-badge">Vosk AI</span>
+                    <span class="tech-badge">Speech Recognition</span>
+                    <span class="tech-badge">SQLite</span>
+                    <span class="tech-badge">HTML5/CSS3</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <!-- Main Voting Interface -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">VOTE</div>
+                    <h2>Voice Voting Interface</h2>
+                </div>
+                
+                <!-- Candidates Display -->
+                <div class="candidates-list">
+                    <h3 style="text-align: center; margin-bottom: 20px; color: #2d3748;">Available Candidates</h3>
+                    <div id="candidatesList">
+                        <div class="loading-spinner"></div> Loading candidates...
+                    </div>
+                </div>
+                
+                <!-- Progress Tracker -->
+                <div class="progress-tracker">
+                    <div class="progress-step" id="step1">
+                        1
+                        <div class="step-label">Voter ID</div>
+                    </div>
+                    <div class="progress-step" id="step2">
+                        2
+                        <div class="step-label">Candidate</div>
+                    </div>
+                    <div class="progress-step" id="step3">
+                        3
+                        <div class="step-label">Confirm</div>
+                    </div>
+                </div>
+                
+                <!-- Voting Controls -->
+                <div class="voting-section">
+                    <button id="startVotingBtn" class="btn btn-primary btn-large" onclick="startVoiceVoting()">
+                        Start Voice Voting
+                    </button>
+                    <button id="resetBtn" class="btn btn-secondary" onclick="resetVoting()" style="display: none; margin-left: 15px;">
+                        🔄 Reset
+                    </button>
+                </div>
+                
+                <!-- Status Display -->
+                <div id="votingStatus" class="status-display status-ready">
+                    Ready to begin voice voting. Click the button above to start the process.
+                </div>
+            </div>
+            
+            <!-- Project Features Sidebar -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">FEATURES</div>
+                    <h2>Project Features</h2>
+                </div>
+                
+                <div class="feature-highlight">
+                    <h4>Advanced AI Integration</h4>
+                    <p>Utilizes Vosk offline speech recognition and Google Cloud Speech API for robust voice processing.</p>
+                </div>
+                
+                <div class="feature-highlight">
+                    <h4>Accessibility First</h4>
+                    <p>Designed for visually impaired users with complete voice-guided navigation and audio feedback.</p>
+                </div>
+                
+                <div class="feature-highlight">
+                    <h4>Secure & Private</h4>
+                    <p>Local voice processing with encrypted vote storage and anonymous ballot casting.</p>
+                </div>
+                
+                <div class="feature-highlight">
+                    <h4>Modern Web Architecture</h4>
+                    <p>Flask backend with responsive frontend, RESTful APIs, and real-time status updates.</p>
+                </div>
+                
+                <!-- Results Section -->
+                <div class="results-section">
+                    <h3 style="color: #2d3748; margin-bottom: 15px;">Voting Results</h3>
+                    <button class="btn btn-secondary" onclick="showResults()">View Results</button>
+                    <div id="resultsContainer" style="display: none;">
+                        <table class="results-table" id="resultsTable">
+                            <thead>
+                                <tr>
+                                    <th>Voter ID</th>
+                                    <th>Candidate</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>Voice Voting Instructions</h3>
+            <ol>
+                <li><strong>Start Voting:</strong> Click the "Start Voice Voting" button to begin the process</li>
+                <li><strong>Voter ID:</strong> When prompted, clearly say <strong>"TEST1"</strong> or <strong>"TEST2"</strong></li>
+                <li><strong>Candidate Selection:</strong> Listen to the candidates and say the number (<strong>"1"</strong>, <strong>"2"</strong>, or <strong>"3"</strong>)</li>
+                <li><strong>Confirmation:</strong> Say <strong>"confirm"</strong> to cast your vote or <strong>"cancel"</strong> to abort</li>
+                <li><strong>Completion:</strong> Your vote will be recorded and you'll receive confirmation</li>
+            </ol>
+            <p style="margin-top: 15px; font-style: italic; color: #4a5568;">
+                <strong>Note:</strong> This system uses advanced AI for voice recognition. Speak clearly in a quiet environment for best results.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let currentSessionId = null;
+        let statusPollingInterval = null;
+        
+        // Load candidates on page load
+        window.onload = function() {
+            loadCandidates();
+        };
+        
+        function loadCandidates() {
+            fetch('/api/candidates')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('candidatesList');
+                    
+                    if (data.success && data.candidates) {
+                        container.innerHTML = '';
+                        data.candidates.forEach(candidate => {
+                            const candidateDiv = document.createElement('div');
+                            candidateDiv.className = 'candidate-item';
+                            candidateDiv.innerHTML = `
+                                <div class="candidate-number">${candidate.id}</div>
+                                <div class="candidate-name">${candidate.name}</div>
+                            `;
+                            container.appendChild(candidateDiv);
+                        });
+                    } else {
+                        container.innerHTML = '<div style="color: #e53e3e;">Error loading candidates</div>';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('candidatesList').innerHTML = '<div style="color: #e53e3e;">Error loading candidates</div>';
+                });
+        }
+        
+        function startVoiceVoting() {
+            const startBtn = document.getElementById('startVotingBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<div class="loading-spinner"></div>Starting...';
+            
+            fetch('/api/start-voice-voting', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    currentSessionId = data.session_id;
+                    startBtn.style.display = 'none';
+                    resetBtn.style.display = 'inline-block';
+                    
+                    // Start polling for status updates
+                    startStatusPolling();
+                } else {
+                    showVotingStatus(data.error || 'Failed to start voice voting', 'error');
+                    startBtn.disabled = false;
+                    startBtn.innerHTML = 'Start Voice Voting';
+                }
+            })
+            .catch(error => {
+                showVotingStatus('Error starting voice voting: ' + error, 'error');
+                startBtn.disabled = false;
+                startBtn.innerHTML = 'Start Voice Voting';
+            });
+        }
+        
+        function startStatusPolling() {
+            if (statusPollingInterval) {
+                clearInterval(statusPollingInterval);
+            }
+            
+            statusPollingInterval = setInterval(() => {
+                if (currentSessionId) {
+                    fetch(`/api/voting-status/${currentSessionId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                updateProgress(data.step || 1);
+                                showVotingStatus(data.message || 'Processing...', data.status || 'listening');
+                                
+                                // Stop polling if completed or error
+                                if (data.status === 'completed' || data.status === 'error') {
+                                    clearInterval(statusPollingInterval);
+                                    statusPollingInterval = null;
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Status polling error:', error);
+                        });
+                }
+            }, 1000);
+        }
+        
+        function resetVoting() {
+            if (currentSessionId) {
+                fetch(`/api/reset-session/${currentSessionId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        currentSessionId = null;
+                        
+                        if (statusPollingInterval) {
+                            clearInterval(statusPollingInterval);
+                            statusPollingInterval = null;
+                        }
+                        
+                        document.getElementById('startVotingBtn').style.display = 'inline-block';
+                        document.getElementById('startVotingBtn').disabled = false;
+                        document.getElementById('startVotingBtn').innerHTML = 'Start Voice Voting';
+                        document.getElementById('resetBtn').style.display = 'none';
+                        
+                        showVotingStatus('Ready to begin voice voting. Click the button above to start the process.', 'ready');
+                        updateProgress(0);
+                    });
+            }
+        }
+        
+        function showResults() {
+            fetch('/api/results')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const container = document.getElementById('resultsContainer');
+                        const tbody = document.querySelector('#resultsTable tbody');
+                        
+                        tbody.innerHTML = '';
+                        
+                        if (data.results && data.results.length > 0) {
+                            data.results.forEach(result => {
+                                const row = tbody.insertRow();
+                                row.insertCell(0).textContent = result.voter_id || 'N/A';
+                                row.insertCell(1).textContent = result.candidate_name || 'N/A';
+                                row.insertCell(2).textContent = result.timestamp ? new Date(result.timestamp).toLocaleString() : 'N/A';
+                            });
+                        } else {
+                            const row = tbody.insertRow();
+                            const cell = row.insertCell(0);
+                            cell.colSpan = 3;
+                            cell.textContent = 'No votes recorded yet';
+                            cell.style.textAlign = 'center';
+                            cell.style.fontStyle = 'italic';
+                            cell.style.color = '#a0aec0';
+                        }
+                        
+                        container.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading results:', error);
+                });
+        }
+        
+        function showVotingStatus(message, status) {
+            const element = document.getElementById('votingStatus');
+            element.textContent = message;
+            element.className = `status-display status-${status}`;
+        }
+        
+        function updateProgress(currentStep) {
+            for (let i = 1; i <= 3; i++) {
+                const step = document.getElementById(`step${i}`);
+                if (i < currentStep) {
+                    step.className = 'progress-step completed';
+                } else if (i === currentStep) {
+                    step.className = 'progress-step active';
+                } else {
+                    step.className = 'progress-step';
+                }
+            }
+        }
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (statusPollingInterval) {
+                clearInterval(statusPollingInterval);
+            }
+            if (currentSessionId) {
+                fetch(`/api/reset-session/${currentSessionId}`);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+LOG (VoskAPI:ReadDataFiles():model.cc:213) Decoding params beam=10 max-active=3000 lattice-beam=2
+LOG (VoskAPI:ReadDataFiles():model.cc:216) Silence phones 1:2:3:4:5:6:7:8:9:10
+LOG (VoskAPI:RemoveOrphanNodes():nnet-nnet.cc:948) Removed 0 orphan nodes.
+LOG (VoskAPI:RemoveOrphanComponents():nnet-nnet.cc:847) Removing 0 orphan components.
+LOG (VoskAPI:ReadDataFiles():model.cc:248) Loading i-vector extractor from C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/ivector/final.ie
+LOG (VoskAPI:ComputeDerivedVars():ivector-extractor.cc:183) Computing derived variables for iVector extractor
+LOG (VoskAPI:ComputeDerivedVars():ivector-extractor.cc:204) Done.
+LOG (VoskAPI:ReadDataFiles():model.cc:282) Loading HCL and G from C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/graph/HCLr.fst C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/graph/Gr.fst
+LOG (VoskAPI:ReadDataFiles():model.cc:308) Loading winfo C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/graph/phones/word_boundary.int
+LOG (VoskAPI:ReadDataFiles():model.cc:213) Decoding params beam=10 max-active=3000 lattice-beam=2
+LOG (VoskAPI:ReadDataFiles():model.cc:216) Silence phones 1:2:3:4:5:6:7:8:9:10
+LOG (VoskAPI:RemoveOrphanNodes():nnet-nnet.cc:948) Removed 0 orphan nodes.
+LOG (VoskAPI:RemoveOrphanComponents():nnet-nnet.cc:847) Removing 0 orphan components.
+LOG (VoskAPI:ReadDataFiles():model.cc:248) Loading i-vector extractor from C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/ivector/final.ie
+LOG (VoskAPI:ComputeDerivedVars():ivector-extractor.cc:183) Computing derived variables for iVector extractor
+LOG (VoskAPI:ComputeDerivedVars():ivector-extractor.cc:204) Done.
+LOG (VoskAPI:ReadDataFiles():model.cc:282) Loading HCL and G from C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/graph/HCLr.fst C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/graph/Gr.fst
+LOG (VoskAPI:ReadDataFiles():model.cc:308) Loading winfo C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/graph/phones/word_boundary.int
+LOG (VoskAPI:ReadDataFiles():model.cc:213) Decoding params beam=10 max-active=3000 lattice-beam=2
+LOG (VoskAPI:ReadDataFiles():model.cc:216) Silence phones 1:2:3:4:5:6:7:8:9:10
+LOG (VoskAPI:RemoveOrphanNodes():nnet-nnet.cc:948) Removed 0 orphan nodes.
+LOG (VoskAPI:RemoveOrphanComponents():nnet-nnet.cc:847) Removing 0 orphan components.
+LOG (VoskAPI:ReadDataFiles():model.cc:248) Loading i-vector extractor from C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/ivector/final.ie
+LOG (VoskAPI:ComputeDerivedVars():ivector-extractor.cc:183) Computing derived variables for iVector extractor
+LOG (VoskAPI:ComputeDerivedVars():ivector-extractor.cc:204) Done.
+LOG (VoskAPI:ReadDataFiles():model.cc:282) Loading HCL and G from C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/graph/HCLr.fst C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/graph/Gr.fst
+LOG (VoskAPI:ReadDataFiles():model.cc:308) Loading winfo C:\projectes\ai_voting_system-main\models\vosk-model-small-en-us-0.15/graph/phones/word_boundary.int
+Voice subprocess started with args: ['voice_subprocess.py', '1765205351']
+Processing session ID: 1765205351
+Starting voice voting process for session 1765205351
+About to speak welcome message
+[TARGET] [SAFE] Attempting to speak: 'Welcome to the voice voting system....'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Welcome to the voice voting system.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'You need to provide a voter ID first....'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'You need to provide a voter ID first.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Please say your voter ID clearly now....'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Please say your voter ID clearly now.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'I am listening......'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'I am listening...'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+Welcome message completed, starting voice recognition
+Calling listen() function with device_index=1
+[MIC] Listen function called: prefer_vosk=True, timeout=15, should_stop=None
+[SEARCH] Trying Vosk recognition...
+[BOT] Starting Vosk recognition: timeout=15s, sample_rate=16000, device_index=1
+[LOADING] Loading Vosk model...
+[OK] Vosk model loaded
+[MIC] Opening audio stream at 16000Hz...
+[OK] Audio stream opened at 16000Hz
+[MIC] Recording for 15 seconds...
+[VOICE] Partial result: 'first one'
+[DONE] Recording finished. Processed 61 audio chunks.
+[OK] Vosk recognition successful: 'first one'
+[TOOL] Audio stream closed
+[TOOL] PyAudio terminated
+[SEARCH] Vosk result: 'first one'
+[OK] Vosk recognition successful!
+listen() returned: first one
+[TARGET] [SAFE] Attempting to speak: 'I heard you say: first one...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'I heard you say: first one'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Voter ID first one confirmed...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Voter ID first one confirmed'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Excellent! Now I will read the list of candidates....'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Excellent! Now I will read the list of candidates.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Listen carefully to all candidates before making y...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Listen carefully to all candidates before making your choice.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Candidate number 1 is Alice...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Candidate number 1 is Alice'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Candidate number 2 is Bob...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Candidate number 2 is Bob'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Candidate number 3 is Charlie...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Candidate number 3 is Charlie'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Please say just the number of your chosen candidat...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Please say just the number of your chosen candidate.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'For example, say 1, or 2, or 3....'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'For example, say 1, or 2, or 3.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'I am listening for your choice......'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'I am listening for your choice...'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[MIC] Listen function called: prefer_vosk=True, timeout=15, should_stop=None
+[SEARCH] Trying Vosk recognition...
+[BOT] Starting Vosk recognition: timeout=15s, sample_rate=16000, device_index=1
+[LOADING] Loading Vosk model...
+[OK] Vosk model loaded
+[MIC] Opening audio stream at 16000Hz...
+[OK] Audio stream opened at 16000Hz
+[MIC] Recording for 15 seconds...
+[VOICE] Partial result: 'one'
+[DONE] Recording finished. Processed 61 audio chunks.
+[OK] Vosk recognition successful: 'one'
+[TOOL] Audio stream closed
+[TOOL] PyAudio terminated
+[SEARCH] Vosk result: 'one'
+[OK] Vosk recognition successful!
+[TARGET] [SAFE] Attempting to speak: 'I heard you say: one...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'I heard you say: one'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'You selected Alice...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'You selected Alice'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Perfect! You have chosen Alice....'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Perfect! You have chosen Alice.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Now I need your final confirmation to cast your vo...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Now I need your final confirmation to cast your vote.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Say 'confirm' to cast your vote for this candidate...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Say 'confirm' to cast your vote for this candidate.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Or say 'cancel' to abort and not vote....'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Or say 'cancel' to abort and not vote.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'I am listening for your confirmation......'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'I am listening for your confirmation...'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[MIC] Listen function called: prefer_vosk=True, timeout=15, should_stop=None
+[SEARCH] Trying Vosk recognition...
+[BOT] Starting Vosk recognition: timeout=15s, sample_rate=16000, device_index=1
+[LOADING] Loading Vosk model...
+[OK] Vosk model loaded
+[MIC] Opening audio stream at 16000Hz...
+[OK] Audio stream opened at 16000Hz
+[MIC] Recording for 15 seconds...
+[VOICE] Partial result: 'fun'
+[DONE] Recording finished. Processed 61 audio chunks.
+[OK] Vosk recognition successful: 'fun'
+[TOOL] Audio stream closed
+[TOOL] PyAudio terminated
+[SEARCH] Vosk result: 'fun'
+[OK] Vosk recognition successful!
+[TARGET] [SAFE] Attempting to speak: 'I heard you say: fun...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'I heard you say: fun'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Vote cancelled: I heard 'fun' but need 'confirm' t...'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Vote cancelled: I heard 'fun' but need 'confirm' to vote.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Your vote has been cancelled for security....'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Your vote has been cancelled for security.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+[TARGET] [SAFE] Attempting to speak: 'Please start again if you want to vote....'
+[LOADING] [SAFE] Trying Windows SAPI (PowerShell)...
+[SPEAKER] [SAPI] Speaking: 'Please start again if you want to vote.'
+[OK] [SAPI] Speech completed successfully
+[OK] [SAFE] Success with Windows SAPI (PowerShell)
+Cleaning up resources...
