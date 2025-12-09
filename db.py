@@ -35,7 +35,7 @@ def init_db():
         cur.execute(stmt)
 
     # Demo data
-    cur.execute("INSERT OR IGNORE INTO voters (id, name) VALUES ('TEST1','Demo Voter')")
+    cur.execute("INSERT OR IGNORE INTO voters (id, name) VALUES ('FIRST1','Demo Voter')")
     cur.execute("INSERT OR IGNORE INTO candidates (id, name) VALUES (1,'Alice')")
     cur.execute("INSERT OR IGNORE INTO candidates (id, name) VALUES (2,'Bob')")
     cur.execute("INSERT OR IGNORE INTO candidates (id, name) VALUES (3,'Charlie')")
