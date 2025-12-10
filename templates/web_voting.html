@@ -514,9 +514,8 @@
                         <table class="results-table" id="resultsTable">
                             <thead>
                                 <tr>
-                                    <th>Voter ID</th>
                                     <th>Candidate</th>
-                                    <th>Timestamp</th>
+                                    <th>Votes</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -545,6 +544,8 @@
     <script>
         let currentSessionId = null;
         let statusPollingInterval = null;
+        // Map of candidate_id -> candidate_name for displaying results
+        const candidatesById = {};
         
         // Load candidates on page load
         window.onload = function() {
@@ -560,6 +561,9 @@
                     if (data.success && data.candidates) {
                         container.innerHTML = '';
                         data.candidates.forEach(candidate => {
+                            // Cache for later use in results table
+                            candidatesById[candidate.id] = candidate.name;
+                            
                             const candidateDiv = document.createElement('div');
                             candidateDiv.className = 'candidate-item';
                             candidateDiv.innerHTML = `
@@ -674,16 +678,20 @@
                         tbody.innerHTML = '';
                         
                         if (data.results && data.results.length > 0) {
+                            // Backend returns an array of [candidate_id, count] pairs
                             data.results.forEach(result => {
                                 const row = tbody.insertRow();
-                                row.insertCell(0).textContent = result.voter_id || 'N/A';
-                                row.insertCell(1).textContent = result.candidate_name || 'N/A';
-                                row.insertCell(2).textContent = result.timestamp ? new Date(result.timestamp).toLocaleString() : 'N/A';
+                                const candidateId = result[0];
+                                const count = result[1];
+                                const name = candidatesById[candidateId] || `Candidate ${candidateId}`;
+                                
+                                row.insertCell(0).textContent = name;
+                                row.insertCell(1).textContent = count;
                             });
                         } else {
                             const row = tbody.insertRow();
                             const cell = row.insertCell(0);
-                            cell.colSpan = 3;
+                            cell.colSpan = 2;
                             cell.textContent = 'No votes recorded yet';
                             cell.style.textAlign = 'center';
                             cell.style.fontStyle = 'italic';

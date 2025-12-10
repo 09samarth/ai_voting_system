@@ -150,19 +150,35 @@ def voice_voting_process(session_id):
         speak_subprocess_safe(f"I heard you say: {choice}")
         
         # Parse candidate choice
-        choice_match = re.search(r"(\d+)", choice)
+        normalized_choice = (choice or "").lower().strip()
+
+        # First try to extract an explicit digit (e.g., "1", "candidate 2")
+        choice_match = re.search(r"\b(\d+)\b", normalized_choice)
         if choice_match:
             candidate_id = int(choice_match.group(1))
         else:
-            # Clear audio feedback for blind users - make it consistent with display
-            error_message = f"Invalid candidate choice: I heard '{choice}'. Please say just the number: 1, 2, or 3."
-            
-            # Speak the same message that will be displayed
-            speak_subprocess_safe(error_message)
-            speak_subprocess_safe("Please say exactly: 1, 2, or 3.")
-            speak_subprocess_safe("Let me restart the candidate selection for you.")
-            send_final_result(session_id, False, error_message)
-            return
+            # Also accept common spoken forms like "one", "two", "three"
+            word_to_number = {
+                "one": 1,
+                "first": 1,
+                "two": 2,
+                "second": 2,
+                "three": 3,
+                "third": 3,
+            }
+            word_match = re.search(r"\b(one|first|two|second|three|third)\b", normalized_choice)
+            if word_match:
+                candidate_id = word_to_number[word_match.group(1)]
+            else:
+                # Clear audio feedback for blind users - make it consistent with display
+                error_message = f"Invalid candidate choice: I heard '{choice}'. Please say just the number: 1, 2, or 3."
+                
+                # Speak the same message that will be displayed
+                speak_subprocess_safe(error_message)
+                speak_subprocess_safe("Please say exactly: 1, 2, or 3.")
+                speak_subprocess_safe("Let me restart the candidate selection for you.")
+                send_final_result(session_id, False, error_message)
+                return
         
         # Find candidate name
         candidate_name = None

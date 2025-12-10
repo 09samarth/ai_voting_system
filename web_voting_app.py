@@ -14,6 +14,11 @@ from console_utils import safe_print
 
 app = Flask(__name__)
 
+# Directory for subprocess log files (keeps project root clean)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOG_DIR = os.path.join(BASE_DIR, "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+
 # Global state for web interface
 voting_sessions = {}
 
@@ -43,8 +48,8 @@ def start_voice_voting():
         # Create a subprocess to handle voice voting
         safe_print(f"Starting voice subprocess for session {session_id}")
         
-        # Create log file for subprocess output
-        log_file = f'subprocess_{session_id}.log'
+        # Create log file for subprocess output inside dedicated logs directory
+        log_file = os.path.join(LOG_DIR, f'subprocess_{session_id}.log')
         
         process = subprocess.Popen([
             'python', 'voice_subprocess.py', session_id

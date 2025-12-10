@@ -36,9 +36,14 @@ def init_db():
 
     # Demo data
     cur.execute("INSERT OR IGNORE INTO voters (id, name) VALUES ('FIRST1','Demo Voter')")
-    cur.execute("INSERT OR IGNORE INTO candidates (id, name) VALUES (1,'Alice')")
-    cur.execute("INSERT OR IGNORE INTO candidates (id, name) VALUES (2,'Bob')")
-    cur.execute("INSERT OR IGNORE INTO candidates (id, name) VALUES (3,'Charlie')")
+    cur.execute("INSERT OR IGNORE INTO candidates (id, name) VALUES (1,'BJP')")
+    cur.execute("INSERT OR IGNORE INTO candidates (id, name) VALUES (2,'CONGRESS')")
+    cur.execute("INSERT OR IGNORE INTO candidates (id, name) VALUES (3,'JDS')")
+
+    # Ensure any existing demo candidates are renamed to the desired labels
+    cur.execute("UPDATE candidates SET name='BJP' WHERE id=1")
+    cur.execute("UPDATE candidates SET name='CONGRESS' WHERE id=2")
+    cur.execute("UPDATE candidates SET name='JDS' WHERE id=3")
 
     conn.commit()
     conn.close()
