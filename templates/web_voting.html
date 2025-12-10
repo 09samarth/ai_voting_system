@@ -42,6 +42,13 @@
             opacity: 0.9;
             margin-bottom: 10px;
         }
+
+        .header-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
         
         .header .project-info {
             font-size: 1rem;
@@ -232,6 +239,11 @@
             background: #e2e8f0;
             color: #4a5568;
         }
+
+        .btn-small {
+            padding: 10px 18px;
+            font-size: 0.95rem;
+        }
         
         .btn-secondary:hover {
             background: #cbd5e0;
@@ -375,6 +387,77 @@
             font-weight: 500;
         }
         
+        /* Modal overlays for overview and results */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 40;
+        }
+
+        .modal-overlay.modal--visible {
+            display: flex;
+        }
+
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-panel {
+            position: relative;
+            max-width: 720px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            padding: 22px 24px 20px;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .modal-title {
+            margin: 0;
+            font-size: 1.4rem;
+            color: #2d3748;
+        }
+
+        .modal-close-btn {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1.4rem;
+            line-height: 1;
+            padding: 4px 8px;
+            border-radius: 999px;
+            color: #4a5568;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: #e2e8f0;
+            color: #2d3748;
+            transform: translateY(-1px);
+        }
+
+        .modal-body {
+            margin-top: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
         .loading-spinner {
             display: inline-block;
             width: 20px;
@@ -417,7 +500,7 @@
     <div class="container">
         <div class="header">
             <h1>AI Voice Voting System</h1>
-            <p class="subtitle">Accessible Voice-Guided Democratic Participation</p>
+            <p class="subtitle">Accessible, voice-guided participation for voting purposes.</p>
             <div class="project-info">
                 <strong>Major Project Demonstration</strong><br>
                 Advanced AI • Voice Recognition • Web Technologies
@@ -428,6 +511,14 @@
                     <span class="tech-badge">SQLite</span>
                     <span class="tech-badge">HTML5/CSS3</span>
                 </div>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn btn-secondary btn-small" onclick="openOverviewModal()">
+                    Project Overview
+                </button>
+                <button type="button" class="btn btn-secondary btn-small" onclick="openResultsModal(); showResults();">
+                    Live Results
+                </button>
             </div>
         </div>
         
@@ -479,47 +570,60 @@
                 </div>
             </div>
             
-            <!-- Project Features Sidebar -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-icon">FEATURES</div>
-                    <h2>Project Features</h2>
+        </div>
+        
+        <!-- Overview Modal -->
+        <div id="overviewModal" class="modal-overlay" aria-hidden="true">
+            <div class="modal-backdrop" onclick="closeOverviewModal()"></div>
+            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="overviewModalTitle">
+                <header class="modal-header">
+                    <h2 id="overviewModalTitle" class="modal-title">Project Overview</h2>
+                    <button type="button" class="modal-close-btn" onclick="closeOverviewModal()" aria-label="Close project overview">&times;</button>
+                </header>
+                <div class="modal-body">
+                    <div class="feature-highlight">
+                        <h4>Advanced AI Integration</h4>
+                        <p>Utilizes Vosk offline speech recognition and Google Cloud Speech API for robust voice processing.</p>
+                    </div>
+                    <div class="feature-highlight">
+                        <h4>Accessibility First</h4>
+                        <p>Designed for visually impaired users with complete voice-guided navigation and audio feedback.</p>
+                    </div>
+                    <div class="feature-highlight">
+                        <h4>Secure &amp; Private</h4>
+                        <p>Local voice processing with encrypted vote storage and anonymous ballot casting.</p>
+                    </div>
+                    <div class="feature-highlight">
+                        <h4>Modern Web Architecture</h4>
+                        <p>Flask backend with responsive frontend, RESTful APIs, and real-time status updates.</p>
+                    </div>
                 </div>
-                
-                <div class="feature-highlight">
-                    <h4>Advanced AI Integration</h4>
-                    <p>Utilizes Vosk offline speech recognition and Google Cloud Speech API for robust voice processing.</p>
-                </div>
-                
-                <div class="feature-highlight">
-                    <h4>Accessibility First</h4>
-                    <p>Designed for visually impaired users with complete voice-guided navigation and audio feedback.</p>
-                </div>
-                
-                <div class="feature-highlight">
-                    <h4>Secure & Private</h4>
-                    <p>Local voice processing with encrypted vote storage and anonymous ballot casting.</p>
-                </div>
-                
-                <div class="feature-highlight">
-                    <h4>Modern Web Architecture</h4>
-                    <p>Flask backend with responsive frontend, RESTful APIs, and real-time status updates.</p>
-                </div>
-                
-                <!-- Results Section -->
-                <div class="results-section">
-                    <h3 style="color: #2d3748; margin-bottom: 15px;">Voting Results</h3>
-                    <button class="btn btn-secondary" onclick="showResults()">View Results</button>
-                    <div id="resultsContainer" style="display: none;">
-                        <table class="results-table" id="resultsTable">
-                            <thead>
-                                <tr>
-                                    <th>Candidate</th>
-                                    <th>Votes</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+            </div>
+        </div>
+        
+        <!-- Results Modal -->
+        <div id="resultsModal" class="modal-overlay" aria-hidden="true">
+            <div class="modal-backdrop" onclick="closeResultsModal()"></div>
+            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="resultsModalTitle">
+                <header class="modal-header">
+                    <h2 id="resultsModalTitle" class="modal-title">Live Results</h2>
+                    <button type="button" class="modal-close-btn" onclick="closeResultsModal()" aria-label="Close live results">&times;</button>
+                </header>
+                <div class="modal-body">
+                    <div class="results-section">
+                        <h3 style="color: #2d3748; margin-bottom: 15px;">Voting Results</h3>
+                        <button class="btn btn-secondary btn-small" onclick="showResults()">Refresh Results</button>
+                        <div id="resultsContainer" style="display: none; margin-top: 15px;">
+                            <table class="results-table" id="resultsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Candidate</th>
+                                        <th>Votes</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -723,6 +827,34 @@
                     step.className = 'progress-step';
                 }
             }
+        }
+        
+        function openOverviewModal() {
+            const modal = document.getElementById('overviewModal');
+            if (!modal) return;
+            modal.classList.add('modal--visible');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+        
+        function closeOverviewModal() {
+            const modal = document.getElementById('overviewModal');
+            if (!modal) return;
+            modal.classList.remove('modal--visible');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+        
+        function openResultsModal() {
+            const modal = document.getElementById('resultsModal');
+            if (!modal) return;
+            modal.classList.add('modal--visible');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+        
+        function closeResultsModal() {
+            const modal = document.getElementById('resultsModal');
+            if (!modal) return;
+            modal.classList.remove('modal--visible');
+            modal.setAttribute('aria-hidden', 'true');
         }
         
         // Cleanup on page unload
