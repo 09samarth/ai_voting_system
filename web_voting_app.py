@@ -110,7 +110,9 @@ def voting_status(session_id):
     else:
         # Process finished
         safe_print(f"Process for session {session_id} has completed with return code: {process.returncode}")
-        # Clean up status file
+        if process.returncode != 0 and session.get('status') != 'success':
+            session['status'] = 'error'
+            session['message'] = 'Voice processing failed'
         try:
             if os.path.exists(status_file):
                 os.remove(status_file)
