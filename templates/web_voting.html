@@ -860,10 +860,10 @@
                 </center>
             </div>
             <div class="app-header__meta">
-                <div class="project-pill" aria-label="Major project demo, AI + Voice">
+                <div class="project-pill" aria-label="AI voice voting research demo">
                     <span class="project-pill__dot" aria-hidden="true"></span>
-                    <span class="project-pill__label">MAJOR PROJECT</span>
-                    <span class="project-pill__meta">AI &middot; Voice &middot; Web</span>
+                    <span class="project-pill__label">VOICE VOTING DEMO</span>
+                    <span class="project-pill__meta">AI &middot; Speech &middot; Research</span>
                 </div>
                 <!-- <div class="tech-stack" aria-label="Technology stack">
                     <span class="tech-badge">Python Flask</span>
@@ -873,12 +873,8 @@
                     <span class="tech-badge">HTML / CSS / JS</span>
                 </div> -->
                 <div class="header-links-row">
-                    <button type="button" class="btn btn-secondary btn-small" onclick="openOverviewModal()">
-                        Project overview
-                    </button>
-                    <button type="button" class="btn btn-secondary btn-small" onclick="openResultsModal()">
-                        Live results
-                    </button>
+                    <a href="/" class="btn btn-secondary btn-small">Home</a>
+                    <a href="/results" class="btn btn-secondary btn-small">Live results</a>
                 </div>
             </div>
         </header>
@@ -890,7 +886,6 @@
                     <div class="panel__icon" aria-hidden="true">V</div>
                     <div class="panel__title-group">
                         <h2 id="vote-panel-title">Voice Voting</h2>
-                        <p>Start a guided voice session, follow the prompts, and cast your vote securely.</p>
                     </div>
                 </div>
 
@@ -911,15 +906,15 @@
                         </div>
                     </section>
 
-                    <!-- Stepper -->
+                    <!-- Step indicator (simplified) -->
                     <div class="progress-tracker" aria-hidden="false" aria-label="Voice voting steps">
                         <div class="progress-step" id="step1">
                             1
-                            <div class="step-label">Voter ID</div>
+                            <div class="step-label">ID</div>
                         </div>
                         <div class="progress-step" id="step2">
                             2
-                            <div class="step-label">Candidate</div>
+                            <div class="step-label">Choice</div>
                         </div>
                         <div class="progress-step" id="step3">
                             3
@@ -959,90 +954,12 @@
             </section>
         </main>
 
-        <!-- Project overview modal -->
-        <div id="overviewModal" class="modal-overlay" aria-hidden="true">
-            <div class="modal-backdrop" onclick="closeOverviewModal()"></div>
-            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="overviewModalTitle">
-                <header class="modal-header">
-                    <h2 id="overviewModalTitle" class="modal-title">Project overview</h2>
-                    <button type="button" class="modal-close-btn" onclick="closeOverviewModal()" aria-label="Close project overview">&times;</button>
-                </header>
-                <div class="modal-body">
-                    <section class="feature-list" aria-label="Key features">
-                        <article class="feature-card">
-                            <h3>AI-first voice pipeline</h3>
-                            <p>Combines offline Vosk models and cloud recognition to keep speech input fast, reliable, and resilient.</p>
-                            <span class="feature-tag">AI &amp; Speech</span>
-                        </article>
+        <!-- Results and overview content have been moved to dedicated pages
+             (/results and /overview) to keep this screen focused only on
+             the voice voting interaction. -->
 
-                        <article class="feature-card">
-                            <h3>Accessible by design</h3>
-                            <p>Built for visually impaired voters: voice prompts, clear steps, and keyboard-friendly controls.</p>
-                            <span class="feature-tag">Accessibility</span>
-                        </article>
-
-                        <article class="feature-card">
-                            <h3>Secure local storage</h3>
-                            <p>Votes are written to a local SQLite database, keeping data under your control during demos.</p>
-                            <span class="feature-tag">Data &amp; Security</span>
-                        </article>
-
-                        <article class="feature-card">
-                            <h3>Modern web stack</h3>
-                            <p>Flask APIs, vanilla JavaScript, and a responsive interface that works smoothly on laptops and tablets.</p>
-                            <span class="feature-tag">Web Architecture</span>
-                        </article>
-                    </section>
-                </div>
-            </div>
-        </div>
-
-        <!-- Results modal -->
-        <div id="resultsModal" class="modal-overlay" aria-hidden="true">
-            <div class="modal-backdrop" onclick="closeResultsModal()"></div>
-            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="resultsModalTitle">
-                <header class="modal-header">
-                    <h2 id="resultsModalTitle" class="modal-title">Live results</h2>
-                    <button type="button" class="modal-close-btn" onclick="closeResultsModal()" aria-label="Close live results">&times;</button>
-                </header>
-                <div class="modal-body">
-                    <section class="results-panel" aria-label="Aggregated voting results">
-                        <div class="results-header">
-                            <div>
-                                <h3 class="results-title">Live results</h3>
-                                <p class="results-hint">Summary of votes recorded so far by candidate.</p>
-                            </div>
-                            <button type="button" class="btn btn-secondary btn-small" onclick="showResults()">Refresh results</button>
-                        </div>
-                        <div class="results-wrapper" id="resultsContainer" style="display: none;">
-                            <table class="results-table" id="resultsTable">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Candidate</th>
-                                        <th scope="col">Total votes</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </div>
-
-        <section class="instructions-panel" aria-label="How to use the voice voting system">
-            <h3>How a voice voting session works</h3>
-            <ol>
-                <li><strong>Start:</strong> Click <strong>Start voice voting</strong> to launch the guided voice flow.</li>
-                <li><strong>Voter ID:</strong> When prompted, clearly say your <em>numeric, state-coded</em> voter I D using only numbers. For example, say <strong>"one one two"</strong> for state&nbsp;1, voter&nbsp;12 (internal ID <code>1-12</code>) or <strong>"two four five"</strong> for state&nbsp;2, voter&nbsp;45 (internal ID <code>2-45</code>).</li>
-                <li><strong>Choose candidate:</strong> Listen to the candidates and say the candidate number (for example <strong>"1"</strong>, <strong>"2"</strong>, or <strong>"3"</strong>).</li>
-                <li><strong>Confirm:</strong> Say <strong>"confirm"</strong> to cast your vote or <strong>"cancel"</strong> to stop.</li>
-                <li><strong>Finish:</strong> Wait for the confirmation prompt and check the <em>Live results</em> panel if needed.</li>
-            </ol>
-            <p class="instructions-note">
-                For best recognition quality, use a quiet room, a working microphone, and speak at a natural pace.
-            </p>
-        </section>
+        <!-- Detailed usage instructions removed to keep this page focused and uncluttered.
+             Training and documentation now live on separate overview/materials. -->
     </div>
 
     <script>
@@ -1192,42 +1109,7 @@
                 });
         }
 
-        function showResults() {
-            fetch('/api/results')
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.success) {
-                        return;
-                    }
-
-                    const container = document.getElementById('resultsContainer');
-                    const tbody = document.querySelector('#resultsTable tbody');
-                    tbody.innerHTML = '';
-
-                    if (Array.isArray(data.results) && data.results.length > 0) {
-                        data.results.forEach(result => {
-                            const candidateId = Array.isArray(result) ? result[0] : result.candidate_id;
-                            const count = Array.isArray(result) ? result[1] : result.count;
-                            const name = candidateNameById[candidateId] || `Candidate ${candidateId}`;
-
-                            const row = tbody.insertRow();
-                            row.insertCell(0).textContent = name;
-                            row.insertCell(1).textContent = count;
-                        });
-                    } else {
-                        const row = tbody.insertRow();
-                        const cell = row.insertCell(0);
-                        cell.colSpan = 2;
-                        cell.textContent = 'No votes recorded yet. Cast a vote to see it here.';
-                        cell.className = 'results-empty';
-                    }
-
-                    container.style.display = 'block';
-                })
-                .catch(error => {
-                    console.error('Error loading results:', error);
-                });
-        }
+        // Results are now displayed on the dedicated /results page.
 
         function showVotingStatus(message, status) {
             const wrapper = document.getElementById('votingStatus');
@@ -1278,33 +1160,8 @@
             wrapper.setAttribute('aria-busy', isBusy ? 'true' : 'false');
         }
 
-        function openOverviewModal() {
-            const modal = document.getElementById('overviewModal');
-            if (!modal) return;
-            modal.classList.add('modal--visible');
-            modal.setAttribute('aria-hidden', 'false');
-        }
-
-        function closeOverviewModal() {
-            const modal = document.getElementById('overviewModal');
-            if (!modal) return;
-            modal.classList.remove('modal--visible');
-            modal.setAttribute('aria-hidden', 'true');
-        }
-
-        function openResultsModal() {
-            const modal = document.getElementById('resultsModal');
-            if (!modal) return;
-            modal.classList.add('modal--visible');
-            modal.setAttribute('aria-hidden', 'false');
-        }
-
-        function closeResultsModal() {
-            const modal = document.getElementById('resultsModal');
-            if (!modal) return;
-            modal.classList.remove('modal--visible');
-            modal.setAttribute('aria-hidden', 'true');
-        }
+        // Modal helpers removed: overview and results now live on
+        // their own dedicated routes (/overview and /results).
 
         window.addEventListener('beforeunload', function () {
             if (statusPollingInterval) {

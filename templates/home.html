@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Voice Voting Portal</title>
+  <style>
+    :root {
+      --bg-start: #020617;
+      --bg-mid: #0b1120;
+      --bg-end: #1e1b4b;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.15);
+      --accent-strong: rgba(56, 189, 248, 0.5);
+      --accent-secondary: #a855f7;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --card-bg: rgba(15, 23, 42, 0.96);
+      --card-border: rgba(148, 163, 184, 0.45);
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --shadow-strong: 0 18px 45px rgba(15, 23, 42, 0.9);
+      --shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.8);
+      --focus-ring: 2px solid var(--accent);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.24), transparent 58%),
+        radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.24), transparent 58%),
+        linear-gradient(to bottom right, var(--bg-start), var(--bg-mid), var(--bg-end));
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1120px;
+      margin: 20px 16px 32px;
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 52px);
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 12px;
+      padding: 6px 12px;
+      background: #020617;
+      color: var(--text-main);
+      border-radius: 999px;
+      border: 1px solid var(--accent-strong);
+      font-size: 0.85rem;
+      z-index: 50;
+      transition: top 0.15s ease-out;
+    }
+
+    .skip-link:focus-visible {
+      top: 12px;
+      outline: none;
+    }
+
+    header.hero {
+      position: relative;
+      flex: 0 0 auto;
+      padding: 18px 10px 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-soft);
+      font-size: 0.78rem;
+    }
+
+    .hero-pill-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.4);
+    }
+
+    .hero-pill-label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-weight: 600;
+      font-size: 0.72rem;
+    }
+
+    .hero-pill-meta {
+      color: #c4d3ff;
+      font-size: 0.75rem;
+    }
+
+    .hero-icon-circle {
+      margin-top: 6px;
+      width: 60px;
+      height: 60px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 30% 20%, #38bdf8, #4f46e5);
+      box-shadow: 0 20px 50px rgba(37, 99, 235, 0.7);
+    }
+
+    .hero-icon-circle svg {
+      width: 30px;
+      height: 30px;
+      fill: #e5f4ff;
+    }
+
+    .hero-title {
+      margin: 10px 0 4px;
+      font-size: clamp(2.1rem, 3.4vw, 2.7rem);
+      letter-spacing: 0.03em;
+    }
+
+    .hero-subtitle {
+      margin: 0;
+      max-width: 620px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .hero-actions {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 24px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: #020617;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 16px 40px rgba(56, 189, 248, 0.65);
+      transition:
+        transform 150ms ease-out,
+        box-shadow 150ms ease-out,
+        background 150ms ease-out;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(56, 189, 248, 0.85);
+      background: linear-gradient(135deg, #38bdf8, #06b6d4);
+    }
+
+    .btn-primary:focus-visible {
+      outline: var(--focus-ring);
+      outline-offset: 3px;
+    }
+
+    .hero-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    main {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .feature-panel {
+      margin-top: 8px;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .actions-section {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .action-card {
+      position: relative;
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--card-border);
+      padding: 14px 14px 12px;
+      box-shadow: var(--shadow-strong);
+      transition:
+        transform 160ms ease-out,
+        box-shadow 160ms ease-out,
+        border-color 160ms ease-out,
+        background 160ms ease-out;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .action-card:hover,
+    .action-card:focus-within {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 22px 60px rgba(15, 23, 42, 0.95);
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.13), transparent 55%),
+        var(--card-bg);
+    }
+
+    .action-card-header-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .action-card-header-label--primary {
+      background: rgba(56, 189, 248, 0.16);
+      color: #e0f2fe;
+    }
+
+    .action-card-header-label--secondary {
+      background: rgba(168, 85, 247, 0.18);
+      color: #ede9fe;
+    }
+
+    .action-card-title {
+      margin: 8px 0 4px;
+      font-size: 1.1rem;
+    }
+
+    .action-card-text {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .action-card-footer {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-main);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition:
+        transform 150ms ease-out,
+        box-shadow 150ms ease-out,
+        background 150ms ease-out,
+        border-color 150ms ease-out;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-1px);
+      background: rgba(15, 23, 42, 1);
+      border-color: rgba(148, 163, 184, 0.9);
+      box-shadow: 0 16px 45px rgba(15, 23, 42, 0.95);
+    }
+
+    .btn-secondary:focus-visible {
+      outline: var(--focus-ring);
+      outline-offset: 3px;
+    }
+
+    .btn-secondary--info {
+      cursor: default;
+      opacity: 0.9;
+    }
+
+    .btn-secondary--info:hover {
+      transform: none;
+      box-shadow: var(--shadow-soft);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .how-section {
+      margin-top: 10px;
+      padding: 10px 4px 4px;
+      border-radius: 0;
+      background: transparent;
+      border-top: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: none;
+    }
+
+    .how-title {
+      margin: 0 0 8px;
+      font-size: 0.95rem;
+    }
+
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .how-step {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .how-step-badge {
+      margin-top: 2px;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent-strong);
+    }
+
+    .how-step-content-title {
+      font-size: 0.85rem;
+      margin: 0;
+    }
+
+    .how-step-content-text {
+      margin: 2px 0 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .fade-in-ready {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    .fade-in-visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition:
+        opacity 480ms ease-out,
+        transform 480ms ease-out;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: var(--focus-ring);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 900px) {
+      .cards-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        margin-inline: 12px;
+      }
+
+      .hero-title {
+        font-size: 1.8rem;
+      }
+
+      .hero-subtitle {
+        font-size: 0.88rem;
+      }
+
+      .how-steps {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <div class="page">
+    <header class="hero" role="banner">
+      <div class="hero-pill" data-fade-in>
+        <span class="hero-pill-dot" aria-hidden="true"></span>
+        <span class="hero-pill-label">AI Voice Voting Portal</span>
+        <span class="hero-pill-meta">Accessible · Speech · Research Demo</span>
+      </div>
+
+      <div class="hero-icon-circle" data-fade-in aria-hidden="true">
+        <svg viewBox="0 0 24 24" role="img" aria-label="Microphone icon">
+          <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Zm5-3a1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V20h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-2.07A7 7 0 0 1 5 11a1 1 0 1 1 2 0 5 5 0 0 0 10 0Z"></path>
+        </svg>
+      </div>
+
+      <h1 id="hero-title" class="hero-title" data-fade-in>
+        AI Voice Voting Portal
+      </h1>
+      <p class="hero-subtitle" data-fade-in>
+        An Accessible AI-Driven Voice Voting System designed for secure, hands-free participation.
+      </p>
+
+      <div class="hero-actions" data-fade-in>
+        <a
+          href="/voice-voting"
+          class="btn-primary"
+          role="button"
+          aria-label="Start voice voting session"
+        >
+          <span aria-hidden="true">🎤</span>
+          <span>Start Voice Voting</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="main" aria-label="AI Voice Voting main actions and information">
+      <section class="feature-panel" aria-label="Voice voting actions and workflow">
+        <div class="actions-section" aria-label="Primary actions">
+          <div class="cards-grid">
+          <article class="action-card" data-fade-in>
+            <header>
+              <div class="action-card-header-label action-card-header-label--secondary">
+                <span aria-hidden="true">📊</span>
+                <span>Live Results</span>
+              </div>
+              <h2 class="action-card-title">Monitor real-time totals</h2>
+              <p class="action-card-text">
+                View aggregated vote counts from the local SQLite database for presentations and analysis.
+              </p>
+            </header>
+            <div class="action-card-footer">
+              <a
+                href="/results"
+                class="btn-secondary"
+                role="button"
+                aria-label="View live voting results"
+              >
+                <span aria-hidden="true">📊</span>
+                <span>View Live Results</span>
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var prefersReducedMotion = false;
+      try {
+        prefersReducedMotion = window.matchMedia &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      } catch (e) {}
+
+      window.addEventListener("DOMContentLoaded", function () {
+        var fadeEls = document.querySelectorAll("[data-fade-in]");
+        fadeEls.forEach(function (el, index) {
+          el.classList.add("fade-in-ready");
+          var delayMs = prefersReducedMotion ? 0 : index * 80;
+          setTimeout(function () {
+            el.classList.add("fade-in-visible");
+          }, delayMs);
+        });
+
+        if (!prefersReducedMotion && "speechSynthesis" in window) {
+          try {
+            if (!sessionStorage.getItem("ai-voice-voting-welcome-spoken")) {
+              var msg = new SpeechSynthesisUtterance(
+                "Welcome to the A I Voice Voting Portal. " +
+                  "You can press the Tab key to move between controls, " +
+                  "or activate Start Voice Voting to begin."
+              );
+              msg.rate = 1;
+              msg.pitch = 1;
+              window.speechSynthesis.speak(msg);
+              sessionStorage.setItem("ai-voice-voting-welcome-spoken", "1");
+            }
+          } catch (e) {}
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

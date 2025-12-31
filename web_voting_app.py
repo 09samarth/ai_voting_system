@@ -23,9 +23,27 @@ os.makedirs(LOG_DIR, exist_ok=True)
 voting_sessions = {}
 
 @app.route('/')
-def index():
-    """Main voting interface"""
+def home():
+    """Landing page with separate links for each major feature"""
+    return render_template('home.html')
+
+
+@app.route('/voice-voting')
+def voice_voting_page():
+    """Dedicated page for the voice voting flow"""
     return render_template('web_voting.html')
+
+
+@app.route('/results')
+def results_page():
+    """Dedicated page for viewing aggregated voting results"""
+    return render_template('results.html')
+
+
+@app.route('/overview')
+def overview_page():
+    """Project overview and documentation page"""
+    return render_template('overview.html')
 
 @app.route('/api/candidates')
 def get_candidates_api():
