@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Logs - Admin - AI Voice Voting Portal</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #020617;
+      --border-subtle: rgba(148, 163, 184, 0.45);
+      --text-main: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.25), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.25), transparent 55%),
+        linear-gradient(to bottom right, #020617, #030712, #020617);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px 6px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #f9fafb, #38bdf8 45%, #0ea5e9 80%);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.8);
+    }
+
+    .brand-text {
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid transparent;
+    }
+
+    nav a.active {
+      color: #e5e7eb;
+      border-color: rgba(148, 163, 184, 0.7);
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.2), transparent 55%);
+    }
+
+    .logout-link {
+      font-size: 0.78rem;
+      color: #fecaca;
+    }
+
+    main {
+      padding: 4px 20px 18px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.4rem;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      border-radius: 14px;
+      border: 1px solid var(--border-subtle);
+      padding: 10px 12px;
+      background: linear-gradient(to bottom right, rgba(15,23,42,0.98), rgba(15,23,42,0.94));
+    }
+
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+
+    .card p {
+      margin: 0 0 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 6px;
+    }
+
+    th,
+    td {
+      padding: 6px 6px;
+      border-bottom: 1px solid rgba(30, 64, 175, 0.7);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div class="brand-text">Admin &mdash; Logs</div>
+    </div>
+    <nav aria-label="Admin navigation">
+      <a href="{{ url_for('admin_voters') }}">Voters</a>
+      <a href="{{ url_for('admin_elections') }}">Elections</a>
+      <a href="{{ url_for('admin_results') }}">Live Results</a>
+      <a class="active" href="{{ url_for('admin_logs_view') }}">Logs</a>
+      <a class="logout-link" href="{{ url_for('admin_logout') }}">Sign out ({{ admin_username }})</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Logs</h1>
+    <p class="subtitle">Inspect vote records and admin activity for teaching and debugging. Vote logs avoid directly linking to voter identity.</p>
+
+    <div class="layout">
+      <section class="card" aria-label="Vote logs">
+        <h2>Vote logs</h2>
+        <p>Recent vote entries from the database. Voter tokens are shown as stored, without resolving to named identities.</p>
+        <p class="hint">Limited to the most recent {{ vote_logs|length }} rows.</p>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Voter token</th>
+                <th>Candidate ID</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in vote_logs %}
+              {# expect columns: id, voter_token, candidate_id, created_at #}
+              <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="4">No votes recorded yet.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Admin activity logs">
+        <h2>Admin activity</h2>
+        <p>High-level record of administrator sign-ins and configuration changes.</p>
+        <p class="hint">Limited to the most recent {{ admin_logs|length }} rows.</p>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Admin</th>
+                <th>Action</th>
+                <th>Details</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in admin_logs %}
+              {# expect columns: id, admin_username, action, details, ts #}
+              <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] or '-' }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] or '-' }}</td>
+                <td>{{ row[4] }}</td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="5">No admin actions recorded yet.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

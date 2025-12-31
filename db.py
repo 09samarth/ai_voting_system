@@ -1,6 +1,8 @@
 import sqlite3
 from pathlib import Path
 import random
+from typing import List, Tuple, Optional
+from werkzeug.security import generate_password_hash
 
 DB_PATH = Path(__file__).parent / "votes.db"
 
@@ -8,7 +10,11 @@ SCHEMA = [
     """
     CREATE TABLE IF NOT EXISTS voters (
         id TEXT PRIMARY KEY,
-        name TEXT
+        name TEXT,
+        constituency TEXT,
+        language TEXT,
+        accessibility_flag TEXT,
+        enabled INTEGER DEFAULT 1
     )
     """,
 
@@ -26,7 +32,45 @@ SCHEMA = [
         candidate_id INTEGER,
         ts DATETIME DEFAULT CURRENT_TIMESTAMP
     )
+    """,
+
     """
+    CREATE TABLE IF NOT EXISTS admins (
+        username TEXT PRIMARY KEY,
+        password_hash TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+    """,
+
+    """
+    CREATE TABLE IF NOT EXISTS elections (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        is_active INTEGER DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        closed_at DATETIME
+    )
+    """,
+
+    """
+    CREATE TABLE IF NOT EXISTS election_candidates (
+        election_id INTEGER NOT NULL,
+        candidate_id INTEGER NOT NULL,
+        PRIMARY KEY (election_id, candidate_id),
+        FOREIGN KEY (election_id) REFERENCES elections(id),
+        FOREIGN KEY (candidate_id) REFERENCES candidates(id)
+    )
+    """,
+
+    """
+    CREATE TABLE IF NOT EXISTS admin_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        admin_username TEXT,
+        action TEXT,
+        details TEXT,
+        ts DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+    """,
 ]
 
 def init_db():
@@ -34,6 +78,15 @@ def init_db():
     cur = conn.cursor()
     for stmt in SCHEMA:
         cur.execute(stmt)
+
+    # Ensure default admin user for demo purposes
+    # Username: admin, Password: admin123 (hashed)
+    cur.execute("SELECT COUNT(*) FROM admins WHERE username = 'admin'")
+    if cur.fetchone()[0] == 0:
+        cur.execute(
+            "INSERT INTO admins (username, password_hash) VALUES (?, ?)",
+            ("admin", generate_password_hash("admin123")),
+        )
 
     # Demo data (legacy non-numeric example)
     cur.execute("INSERT OR IGNORE INTO voters (id, name) VALUES ('FIRST1','Demo Voter')")
@@ -99,7 +152,11 @@ def init_db():
     conn.commit()
     conn.close()
 
-def get_candidates():
+# ----------------------
+# Public voting helpers
+# ----------------------
+
+def get_candidates() -> List[Tuple[int, str]]:
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute("SELECT id, name FROM candidates ORDER BY id")
@@ -107,17 +164,157 @@ def get_candidates():
     conn.close()
     return rows
 
-def record_vote(voter_token, candidate_id):
+def record_vote(voter_token: str, candidate_id: int) -> None:
+    """Record a vote for the given voter token.
+
+    Note: For academic demo purposes, this function does not enforce
+    one-vote-per-voter cryptographically. The admin panel can still
+    inspect aggregated results and vote logs.
+    """
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
-    cur.execute("INSERT INTO votes (voter_token, candidate_id) VALUES (?,?)", (voter_token, candidate_id))
+    cur.execute(
+        "INSERT INTO votes (voter_token, candidate_id) VALUES (?, ?)",
+        (voter_token, candidate_id),
+    )
     conn.commit()
     conn.close()
 
-def get_votes():
+def get_votes() -> List[Tuple[int, int]]:
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute("SELECT candidate_id, COUNT(*) FROM votes GROUP BY candidate_id")
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+# ----------------------
+# Admin helpers
+# ----------------------
+
+def get_admin(username: str) -> Optional[Tuple[str, str, str]]:
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("SELECT username, password_hash, created_at FROM admins WHERE username = ?", (username,))
+    row = cur.fetchone()
+    conn.close()
+    return row
+
+def record_admin_action(admin_username: str, action: str, details: str = "") -> None:
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO admin_logs (admin_username, action, details) VALUES (?, ?, ?)",
+        (admin_username, action, details),
+    )
+    conn.commit()
+    conn.close()
+
+def list_voters() -> List[Tuple]:
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT id, name, constituency, language, accessibility_flag, enabled "
+        "FROM voters ORDER BY id"
+    )
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+def create_voter(voter_id: str, name: str, constituency: str, language: str, accessibility_flag: str) -> None:
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT OR IGNORE INTO voters (id, name, constituency, language, accessibility_flag, enabled) "
+        "VALUES (?, ?, ?, ?, ?, 1)",
+        (voter_id, name, constituency, language, accessibility_flag),
+    )
+    conn.commit()
+    conn.close()
+
+def set_voter_enabled(voter_id: str, enabled: bool) -> None:
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE voters SET enabled = ? WHERE id = ?",
+        (1 if enabled else 0, voter_id),
+    )
+    conn.commit()
+    conn.close()
+
+def list_elections() -> List[Tuple]:
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT id, name, is_active, created_at, closed_at FROM elections ORDER BY created_at DESC"
+    )
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+def create_election(name: str) -> None:
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("INSERT INTO elections (name, is_active) VALUES (?, 0)", (name,))
+    conn.commit()
+    conn.close()
+
+def set_election_active(election_id: int, active: bool) -> None:
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    if active:
+        cur.execute(
+            "UPDATE elections SET is_active = 1, closed_at = NULL WHERE id = ?",
+            (election_id,),
+        )
+    else:
+        cur.execute(
+            "UPDATE elections SET is_active = 0, closed_at = CURRENT_TIMESTAMP WHERE id = ?",
+            (election_id,),
+        )
+    conn.commit()
+    conn.close()
+
+def assign_candidate_to_election(election_id: int, candidate_id: int) -> None:
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT OR IGNORE INTO election_candidates (election_id, candidate_id) VALUES (?, ?)",
+        (election_id, candidate_id),
+    )
+    conn.commit()
+    conn.close()
+
+def remove_candidate_from_election(election_id: int, candidate_id: int) -> None:
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "DELETE FROM election_candidates WHERE election_id = ? AND candidate_id = ?",
+        (election_id, candidate_id),
+    )
+    conn.commit()
+    conn.close()
+
+def get_vote_logs(limit: int = 100) -> List[Tuple]:
+    """Return recent vote rows as (id, voter_token, candidate_id, ts)."""
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT id, voter_token, candidate_id, ts FROM votes ORDER BY ts DESC LIMIT ?",
+        (limit,),
+    )
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+def get_admin_logs(limit: int = 100) -> List[Tuple]:
+    """Return recent admin log rows as (id, admin_username, action, details, ts)."""
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT id, admin_username, action, details, ts FROM admin_logs ORDER BY ts DESC LIMIT ?",
+        (limit,),
+    )
     rows = cur.fetchall()
     conn.close()
     return rows

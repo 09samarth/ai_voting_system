@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live Results - Admin - AI Voice Voting Portal</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #020617;
+      --border-subtle: rgba(148, 163, 184, 0.45);
+      --text-main: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.25), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.25), transparent 55%),
+        linear-gradient(to bottom right, #020617, #030712, #020617);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px 6px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #f9fafb, #38bdf8 45%, #0ea5e9 80%);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.8);
+    }
+
+    .brand-text {
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid transparent;
+    }
+
+    nav a.active {
+      color: #e5e7eb;
+      border-color: rgba(148, 163, 184, 0.7);
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.2), transparent 55%);
+    }
+
+    .logout-link {
+      font-size: 0.78rem;
+      color: #fecaca;
+    }
+
+    main {
+      padding: 4px 20px 18px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.4rem;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .card {
+      border-radius: 14px;
+      border: 1px solid var(--border-subtle);
+      padding: 10px 12px;
+      background: linear-gradient(to bottom right, rgba(15,23,42,0.98), rgba(15,23,42,0.94));
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 6px;
+    }
+
+    th,
+    td {
+      padding: 6px 6px;
+      border-bottom: 1px solid rgba(30, 64, 175, 0.7);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+    }
+
+    .badge-total {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #e0f2fe;
+      border: 1px solid rgba(56, 189, 248, 0.7);
+      font-size: 0.78rem;
+    }
+
+    .progress-bar {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+    }
+
+    .progress-inner {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div class="brand-text">Admin &mdash; Live Results</div>
+    </div>
+    <nav aria-label="Admin navigation">
+      <a href="{{ url_for('admin_voters') }}">Voters</a>
+      <a href="{{ url_for('admin_elections') }}">Elections</a>
+      <a class="active" href="{{ url_for('admin_results') }}">Live Results</a>
+      <a href="{{ url_for('admin_logs_view') }}">Logs</a>
+      <a class="logout-link" href="{{ url_for('admin_logout') }}">Sign out ({{ admin_username }})</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Live Results (Admin)</h1>
+    <p class="subtitle">Read-only totals by candidate based on the same underlying vote records used by the public results page.</p>
+
+    <section class="card" aria-label="Candidate results">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span>Total votes cast</span>
+        <span class="badge-total">{{ overall_total }} votes</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Candidate</th>
+              <th>Votes</th>
+              <th>Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for candidate_id, count in vote_totals %}
+            {% set name = candidates.get(candidate_id, 'Unknown') %}
+            {% set share = (count / overall_total * 100) if overall_total else 0 %}
+            <tr>
+              <td>{{ name }}</td>
+              <td>{{ count }}</td>
+              <td style="min-width:140px;">
+                <div class="progress-bar" aria-hidden="true">
+                  <div class="progress-inner" style="width: {{ '%.1f' % share }}%;"></div>
+                </div>
+                <span style="font-size:0.76rem;color:#9ca3af;">{{ '%.1f' % share }}%</span>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="3">No votes recorded yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
