@@ -133,8 +133,9 @@ def admin_voters():
             voter_id = (request.form.get('voter_id') or '').strip()
             name = (request.form.get('name') or '').strip()
             constituency = (request.form.get('constituency') or '').strip()
-            language = (request.form.get('language') or '').strip()
-            accessibility_flag = request.form.get('accessibility_flag') or 'NORMAL'
+            # Language and accessibility are no longer captured in the UI; store as empty.
+            language = ''
+            accessibility_flag = ''
             if voter_id and name:
                 create_voter(voter_id, name, constituency, language, accessibility_flag)
                 record_admin_action(username, 'create_voter', f'Created voter {voter_id}')

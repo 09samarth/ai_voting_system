@@ -134,7 +134,7 @@
 
     form {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 8px;
       align-items: end;
       margin-top: 6px;
@@ -274,24 +274,6 @@
             <input id="constituency" name="constituency" type="text" />
           </div>
           <div>
-            <label for="language">Language</label>
-            <select id="language" name="language">
-              <option value="">Unspecified</option>
-              <option value="en">English</option>
-              <option value="hi">Hindi</option>
-              <option value="ta">Tamil</option>
-            </select>
-          </div>
-          <div>
-            <label for="accessibility_flag">Accessibility</label>
-            <select id="accessibility_flag" name="accessibility_flag">
-              <option value="none">None specified</option>
-              <option value="screen_reader">Screen reader</option>
-              <option value="low_vision">Low vision</option>
-              <option value="mobility">Mobility</option>
-            </select>
-          </div>
-          <div>
             <button type="submit">Create voter</button>
           </div>
         </form>
@@ -307,8 +289,6 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Constituency</th>
-                <th>Lang</th>
-                <th>Accessibility</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -320,8 +300,6 @@
                 <td>{{ voter[0] }}</td>
                 <td>{{ voter[1] or '-' }}</td>
                 <td>{{ voter[2] or '-' }}</td>
-                <td>{{ voter[3] or '-' }}</td>
-                <td>{{ voter[4] or '-' }}</td>
                 <td>
                   {% if voter[5] %}
                   <span class="badge badge-on">Enabled</span>
@@ -340,7 +318,7 @@
               </tr>
               {% else %}
               <tr>
-                <td colspan="7">No voters found yet.</td>
+                <td colspan="5">No voters found yet.</td>
               </tr>
               {% endfor %}
             </tbody>

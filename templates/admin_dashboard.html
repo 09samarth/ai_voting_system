@@ -108,66 +108,86 @@
       margin-bottom: 14px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
-    }
-
-    .card {
-      border-radius: 14px;
-      border: 1px solid var(--border-subtle);
-      padding: 10px 12px;
-      background: linear-gradient(to bottom right, rgba(15,23,42,0.98), rgba(15,23,42,0.94));
-    }
-
-    .card h2 {
-      margin: 0 0 4px;
-      font-size: 0.95rem;
-    }
-
-    .card p {
-      margin: 0 0 8px;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .card .meta {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    .pill-row {
+    .actions-wrapper {
+      margin-top: 22px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
+      justify-content: center;
     }
 
-    .pill {
-      padding: 3px 7px;
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+      max-width: 640px;
+      width: 100%;
+    }
+
+    .action-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 20px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      font-size: 0.72rem;
-      color: var(--muted);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.22), transparent 55%),
+        linear-gradient(to bottom right, rgba(15, 23, 42, 0.98), rgba(17, 24, 39, 0.98));
+      color: var(--text-main);
+      font-size: 0.92rem;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.95);
+      text-align: center;
+      letter-spacing: 0.02em;
+      transition:
+        transform 130ms ease-out,
+        box-shadow 130ms ease-out,
+        border-color 130ms ease-out,
+        background 130ms ease-out,
+        color 130ms ease-out;
     }
 
-    .pill-accent {
-      background: var(--accent-soft);
-      color: #e0f2fe;
-      border-color: rgba(56, 189, 248, 0.6);
+    .action-link:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.98);
+      border-color: rgba(248, 250, 252, 0.9);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.3), transparent 55%),
+        linear-gradient(to bottom right, rgba(15, 23, 42, 1), rgba(30, 64, 175, 0.9));
+      color: #f9fafb;
     }
 
-    .pill-danger {
-      background: var(--danger-soft);
-      color: #fee2e2;
-      border-color: rgba(248, 113, 113, 0.7);
+    .action-link:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
     }
 
-    .section-title {
-      margin: 14px 0 6px;
-      font-size: 0.95rem;
-      color: var(--muted);
+    .action-link-icon {
+      font-size: 1.05rem;
+    }
+
+    .action-link--voters {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.22), transparent 55%),
+        linear-gradient(to bottom right, rgba(15, 23, 42, 0.98), rgba(37, 99, 235, 0.9));
+    }
+
+    .action-link--elections {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(52, 211, 153, 0.22), transparent 55%),
+        linear-gradient(to bottom right, rgba(15, 23, 42, 0.98), rgba(22, 163, 74, 0.9));
+    }
+
+    .action-link--results {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(251, 191, 36, 0.22), transparent 55%),
+        linear-gradient(to bottom right, rgba(15, 23, 42, 0.98), rgba(202, 138, 4, 0.9));
+    }
+
+    .action-link--logs {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(244, 114, 182, 0.22), transparent 55%),
+        linear-gradient(to bottom right, rgba(15, 23, 42, 0.98), rgba(190, 24, 93, 0.9));
     }
 
     footer {
@@ -202,50 +222,27 @@
 
   <main>
     <h1>Admin Dashboard</h1>
-    <p class="welcome">Signed in as <strong>{{ admin_username }}</strong>. Use the sections below to manage voters, elections, and audits. Public voting stays unchanged.</p>
+    <p class="welcome">Signed in as <strong>{{ admin_username }}</strong>.</p>
 
-    <div class="grid" aria-label="Admin sections overview">
-      <section class="card">
-        <h2>Voter Management</h2>
-        <p>Create and maintain numeric voter IDs, update accessibility flags, and enable or disable records.</p>
-        <div class="pill-row">
-          <span class="pill pill-accent">Numeric state-coded IDs</span>
-          <span class="pill">Accessibility flags</span>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>Election Management</h2>
-        <p>Define elections, attach candidates, and control which election is currently active for demo flows.</p>
-        <div class="pill-row">
-          <span class="pill">Activate / close elections</span>
-          <span class="pill">Assign candidates</span>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>Live Results (Read-only)</h2>
-        <p>Inspect candidate-wise tallies backed by the same data used for public live results.</p>
-        <div class="pill-row">
-          <span class="pill">Candidate totals</span>
-          <span class="pill">Overall turnout</span>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>Audit & System</h2>
-        <p>Review vote logs without linking to identity, and inspect admin activity for teaching and demos.</p>
-        <div class="pill-row">
-          <span class="pill">Vote logs (token-only)</span>
-          <span class="pill">Admin actions</span>
-          <span class="pill pill-danger">No raw audio stored</span>
-        </div>
-      </section>
-    </div>
-
-    <h2 class="section-title">System notes</h2>
-    <div class="card">
-      <p class="meta">This admin panel is for academic demonstrations. It uses session-based auth, hashed passwords, and separates administrator controls from the public voice voting interface.</p>
+    <div class="actions-wrapper" aria-label="Admin primary actions">
+      <div class="actions-grid">
+        <a class="action-link action-link--voters" href="{{ url_for('admin_voters') }}">
+          <span class="action-link-icon" aria-hidden="true">👤</span>
+          <span>Voters</span>
+        </a>
+        <a class="action-link action-link--elections" href="{{ url_for('admin_elections') }}">
+          <span class="action-link-icon" aria-hidden="true">🗳</span>
+          <span>Elections</span>
+        </a>
+        <a class="action-link action-link--results" href="{{ url_for('admin_results') }}">
+          <span class="action-link-icon" aria-hidden="true">📊</span>
+          <span>Live Results</span>
+        </a>
+        <a class="action-link action-link--logs" href="{{ url_for('admin_logs_view') }}">
+          <span class="action-link-icon" aria-hidden="true">📑</span>
+          <span>Logs</span>
+        </a>
+      </div>
     </div>
   </main>
 
